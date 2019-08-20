@@ -1,5 +1,6 @@
 const Router = require('koa-router')
 const router = new Router()
+const { ParameterException, HttpException } = require('../../../core/http-exception')
 
 router.post('/v1/:id/classic/latest', (ctx, next) => {
   console.log(ctx.params)
@@ -9,6 +10,8 @@ router.post('/v1/:id/classic/latest', (ctx, next) => {
   ctx.body = {
     a : 'a'
   }
+  const error = new HttpException()
+  throw error
 })
 
 module.exports = router
