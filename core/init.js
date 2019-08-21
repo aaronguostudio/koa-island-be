@@ -5,6 +5,7 @@ class InitManager {
   static initCore (app) {
     InitManager.app = app
     InitManager.initLoadRoutes()
+    InitManager.loadConfig()
     // InitManager.loadHttpException()
   }
 
@@ -16,6 +17,12 @@ class InitManager {
         InitManager.app.use(obj.routes())
       }
     }
+  }
+
+  static loadConfig(path = '') {
+    const configPath = path || process.cwd() + '/config/config.js'
+    const config = require(configPath)
+    global.config = config
   }
 
   // 挂载到全局变量，不推荐，增加了和系统的耦合性
