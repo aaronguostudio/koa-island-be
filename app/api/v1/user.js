@@ -4,9 +4,7 @@ const router = new Router({
 })
 
 router.post('/register', (ctx) => {
-  ctx.body = {
-    a : 'b'
-  }
+
 })
 
 module.exports = router
