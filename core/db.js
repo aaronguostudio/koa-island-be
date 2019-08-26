@@ -5,10 +5,16 @@ const sequelize = new Sequelize(db.name, db.user, db.password, {
   port: db.port,
   logging: true,
   dialect: 'mysql',
-  define: {}
+  define: {
+    timestamps: true,
+    paranoid: true,
+    understored: false
+  }
 })
 
-sequelize.sync()
+sequelize.sync({
+  force: true
+})
 
 module.exports = {
   sequelize
