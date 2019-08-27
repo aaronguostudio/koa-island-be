@@ -5,6 +5,7 @@ const router = new Router({
 const { User } = require('../../models/user')
 
 const { RegisterValidator } = require('../../validators/validator')
+const { success } = require('../../lib/helper')
 
 router.post('/register', async (ctx) => {
   const v = await new RegisterValidator().validate(ctx)
@@ -15,7 +16,7 @@ router.post('/register', async (ctx) => {
   }
 
   const r = await User.create(user)
-  console.log('>r', r)
+  success()
 })
 
 module.exports = router

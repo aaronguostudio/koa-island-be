@@ -25,10 +25,20 @@ class NotFound extends HttpException {
   }
 }
 
+class Success extends HttpException {
+  constructor (msg, errorCode) {
+    super()
+    this.code = 201
+    this.msg = msg || 'OK'
+    this.errorCode = errorCode || 0
+  }
+}
+
 module.exports = {
   HttpException,
   ParameterException,
-  NotFound
+  NotFound,
+  Success
 }
 
 // class HttpException extends Error{
