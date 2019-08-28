@@ -6,15 +6,18 @@ const { Forbbiden } = require('../core/http-exception')
 // 使用 HttpBasicAuth 传递参数, basic auth 在 postman
 // 里面填在用户名那里，postman basic auth 做加密
 class Auth {
-  constructor () {
-
+  constructor (level) {
+    this.level = level || 1
+    Auth.USER = 8
+    Auth.ADMIN = 16
+    Auth.SUPPER_ADMIN = 32
   }
 
   get m () {
     return async (ctx, next) => {
       // ctx.req 获取的是 node 的 request 对象
       // ctx.request 获取的是 koa 封装的 request 对象
-      const errMsg = 'token 不合法'
+      let errMsg = 'token 不合法'
 
       // 没有 token
       const userToken = basicAuth(ctx.req)
@@ -32,6 +35,11 @@ class Auth {
         }
 
         // token 不合法
+        throw new Forbbiden(errMsg)
+      }
+
+      if (decode.scope < this.level) {
+        errMsg = '权限不足'
         throw new Forbbiden(errMsg)
       }
 
