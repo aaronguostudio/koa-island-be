@@ -8,12 +8,23 @@ const sequelize = new Sequelize(db.name, db.user, db.password, {
   define: {
     timestamps: true,
     paranoid: true,
-    understored: false
+    createdAt:'created_at',
+    updatedAt:'updated_at',
+    deletedAt:'deleted_at',
+    underscored:true,
+    freezeTableName:true,
+    scopes:{
+      bh:{
+        attributes:{
+          exclude:['updated_at','deleted_at','created_at']
+        }
+      }
+    }
   }
 })
 
 sequelize.sync({
-  force: true
+  force: false
 })
 
 module.exports = {

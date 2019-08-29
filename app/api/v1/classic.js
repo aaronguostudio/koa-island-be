@@ -3,18 +3,25 @@ const router = new Router({
   prefix: '/v1/classic'
 })
 
-const { Movie, Music, Sentence } = require('../../models/flow')
 const { Flow } = require('../../models/flow')
 const Auth = require('../../../middlewares/auth')
 
-router.get('/latest', new Auth(9).m, async (ctx, next) => {
-  const flow = Flow.findOne({
+const {
+  Art
+} = require('../../models/art')
+
+router.get('/latest', new Auth(8).m, async (ctx, next) => {
+  const flow = await Flow.findOne({
     order: [
       ['index', 'DESC']
     ]
   })
 
-  ctx.body = flow
+  const art = await Art.getData(flow.art_id, flow.type)
+
+  // dataValues will be serilized as json
+  art.setDataValue('index', flow.index)
+  ctx.body = art
 
 })
 
