@@ -14,7 +14,7 @@ const sequelize = new Sequelize(db.name, db.user, db.password, {
     underscored:true,
     freezeTableName:true,
     scopes:{
-      bh:{
+      bh:{ // bh 是一个自定义的 scope 名
         attributes:{
           exclude:['updated_at','deleted_at','created_at']
         }

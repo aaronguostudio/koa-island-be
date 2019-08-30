@@ -91,8 +91,25 @@ class TokenValidator extends LinValidator {
   }
 }
 
+class LikeValidator extends PositiveIntegerValidator {
+  constructor () {
+    super()
+    this.validateType = checkType
+  }
+}
+
+function checkType (vals) {
+  if (!vals.body.type) {
+    throw new Error('type是必须参数')
+  }
+  if (!LoginTypes.isThisType(vals.body.type)) {
+    throw new Error('type 参数不合法')
+  }
+}
+
 module.exports = {
   PositiveIntegerValidator,
   RegisterValidator,
-  TokenValidator
+  TokenValidator,
+  LikeValidator
 }
