@@ -6,7 +6,10 @@ const router = new Router({
 const { Flow } = require('../../models/flow')
 const { Favor } = require('../../models/favor')
 const Auth = require('../../../middlewares/auth')
-const { PositiveIntegerValidator } = require('../../validators/validator')
+const {
+  PositiveIntegerValidator,
+  ClassicValidator
+} = require('../../validators/validator')
 const { NotFound } = require('../../../core/http-exception')
 
 const {
@@ -75,6 +78,21 @@ router.get('/:index/previous', new Auth().m, async ctx => {
   art.setDataValue('index', flow.index)
   art.setDataValue('like_status', likeLatest)
   ctx.body = art
+})
+
+router.get('/:type/:id/favor', new Auth().m, async ctx => {
+  const v = await new ClassicValidator().validate(ctx)
+  const id = v.get('path.id')
+  const type = parseInt(v.get('path.type'))
+  const art = await Art.getData(id, type)
+  if (!art) {
+    throw new NotFound()
+  }
+  const like = await Favor.userLikeIt(id, type, ctx.auth.uid)
+  ctx.body = {
+    fav_nums: art.fav_nums,
+    like_status: like
+  }
 })
 
 module.exports = router

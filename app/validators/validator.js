@@ -1,6 +1,6 @@
 const { LinValidator, Rule } = require('../../core/lin-validator-v2')
 const { User } = require('../models/user')
-const { LoginTypes } = require('../lib/enum')
+const { ArtTypes, LoginTypes } = require('../lib/enum')
 
 class PositiveIntegerValidator extends LinValidator {
   constructor () {
@@ -94,16 +94,29 @@ class TokenValidator extends LinValidator {
 class LikeValidator extends PositiveIntegerValidator {
   constructor () {
     super()
-    this.validateType = checkType
+    typeChecker.types = ArtTypes
+    this.validateType = typeChecker.check.bind(typeChecker)
   }
 }
 
-function checkType (vals) {
-  if (!vals.body.type) {
-    throw new Error('type是必须参数')
-  }
-  if (!LoginTypes.isThisType(vals.body.type)) {
-    throw new Error('type 参数不合法')
+class ClassicValidator extends LikeValidator {
+  //
+}
+
+let typeChecker = {
+  types: null,
+  check (vals) {
+    let type = vals.body.type || vals.path.type
+    if (!this.types) {
+      throw new Error('调用前必须设置types')
+    }
+    if (!type) {
+      throw new Error('type是必须参数')
+    }
+    type = parseInt(type)
+    if (!this.types.isThisType(type)) {
+      throw new Error('type 参数不合法')
+    }
   }
 }
 
@@ -111,5 +124,6 @@ module.exports = {
   PositiveIntegerValidator,
   RegisterValidator,
   TokenValidator,
-  LikeValidator
+  LikeValidator,
+  ClassicValidator
 }
